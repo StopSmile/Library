@@ -3,8 +3,10 @@ package com.example.Library.repositories;
 import com.example.Library.model.Book;
 import org.springframework.data.repository.CrudRepository;
 
-public interface BookRepository extends CrudRepository<Book,Long> {
+import java.util.Optional;
 
-    Book getBookByTitle(String Title);
+public interface BookRepository extends CrudRepository<Book, Long> {
+
+    Optional<Book> getBookByTitle(String Title);
 
 }

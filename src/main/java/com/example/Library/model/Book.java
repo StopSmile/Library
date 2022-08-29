@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import javax.persistence.*;
 
 
@@ -30,7 +31,6 @@ public class Book {
     @JoinColumn(name = "status_id", foreignKey = @ForeignKey(name = "STATUS_ID_FK")
     )
     private Status status;
-
 
 
 }

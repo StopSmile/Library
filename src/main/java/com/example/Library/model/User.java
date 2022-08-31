@@ -2,6 +2,7 @@ package com.example.Library.model;
 
 import com.example.Library.model.enums.Gender;
 import com.example.Library.model.enums.Role;
+import com.example.Library.model.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class User {
     private String lastName;
     private int age;
     private String email;
+    private String password;
     @ManyToOne
     @JoinColumn(name = "gender_id", foreignKey = @ForeignKey(name = "GENDER_ID_FK")
     )
@@ -31,6 +33,8 @@ public class User {
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "ROLE_ID_FK")
     )
     private Role role;
+    @Enumerated(value = EnumType.STRING)
+    private UserStatus userStatus;
 
 
 

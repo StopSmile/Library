@@ -16,6 +16,7 @@ public class SecurityUser implements UserDetails {
 
     private final String username;
     private final String password;
+
     private final List<SimpleGrantedAuthority> authorities;
     private final boolean isActive;
 

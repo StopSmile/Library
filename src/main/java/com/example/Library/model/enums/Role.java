@@ -1,35 +1,28 @@
 package com.example.Library.model.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "roles")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+public enum Role {
+    GUEST(Set.of(Permission.PERMISSION_GUEST)),
+    ADMIN(Set.of(Permission.PERMISSION_ADMIN,Permission.PERMISSION_CLIENT,Permission.PERMISSION_GUEST)),
+    CLIENT(Set.of(Permission.PERMISSION_CLIENT,Permission.PERMISSION_GUEST));
 
-public class Role {
-    @Id
-    @GeneratedValue
-    private int id;
-    private String name;
+    private final Set<Permission> permissions;
 
-    @Transient
+    Role(Set<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
     public Set<SimpleGrantedAuthority> getAuthorities() {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        SimpleGrantedAuthority ADMIN = new SimpleGrantedAuthority("ADMIN");
-        SimpleGrantedAuthority CLIENT = new SimpleGrantedAuthority("CLIENT");
-        SimpleGrantedAuthority GUEST = new SimpleGrantedAuthority("GUEST");
-        authorities.add(ADMIN);
-        authorities.add(CLIENT);
-        authorities.add(GUEST);
-        return authorities;
+        return getPermissions().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toSet());
     }
 }

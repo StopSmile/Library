@@ -1,7 +1,7 @@
 package com.example.Library.model;
 
+import com.example.Library.model.enums.BookStatus;
 import com.example.Library.model.enums.Language;
-import com.example.Library.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,10 +27,9 @@ public class Book {
     @JoinColumn(name = "language_id", foreignKey = @ForeignKey(name = "LANGUAGE_ID_FK")
     )
     private Language language;
-    @ManyToOne
-    @JoinColumn(name = "status_id", foreignKey = @ForeignKey(name = "STATUS_ID_FK")
-    )
-    private Status status;
+
+    @Enumerated(value = EnumType.STRING)
+    private BookStatus bookStatus;
 
 
 }

@@ -11,8 +11,6 @@ import javax.persistence.*;
 
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "Users")
 public class User {
@@ -29,9 +27,8 @@ public class User {
     @JoinColumn(name = "gender_id", foreignKey = @ForeignKey(name = "GENDER_ID_FK")
     )
     private Gender gender;
-    @ManyToOne
-    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "ROLE_ID_FK")
-    )
+
+    @Enumerated(value = EnumType.STRING)
     private Role role;
     @Enumerated(value = EnumType.STRING)
     private UserStatus userStatus;

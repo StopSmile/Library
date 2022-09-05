@@ -38,7 +38,7 @@ public class ClientRestController {
     }
     @PreAuthorize("hasAuthority('user:client')")
     @PutMapping("/takeBook/{id}")
-    private Optional<Book> takeBook(@PathVariable Long id) {
+    public Optional<Book> takeBook(@PathVariable Long id) {
         if (bookRepository.findById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
@@ -53,7 +53,7 @@ public class ClientRestController {
     }
     @PreAuthorize("hasAuthority('user:client')")
     @PutMapping("/returnBook/{id}")
-    private Optional<Book> returnTheBook(@PathVariable Long id) {
+    public Optional<Book> returnTheBook(@PathVariable Long id) {
         if (bookRepository.findById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }

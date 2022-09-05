@@ -1,7 +1,7 @@
 # Library
 This is the Spring REST application.
 
-Technologies and tools: Java 17 SPRING, WEB, JPA, TEST, POSTGRESQL, LOMBOK, GIT, IntelijIDEA, POSTMAN
+Technologies and tools: Java 17, Spring Boot, Sping Core, Spring Security, JSON Web Token, Spring Web, Spring Jpa, Spring Test, PostgreSQL, Lombok, Git, IntelijIDEA, Postman.
 
 In this application, we have 3 roles: ADMIN, CLIENT, GUEST
 

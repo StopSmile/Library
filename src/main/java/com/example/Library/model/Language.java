@@ -1,4 +1,4 @@
-package com.example.Library.model.enums;
+package com.example.Library.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,12 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "genders")
+@Table(name = "languages")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 
-public class Gender {
+public class Language {
     @Id
     @GeneratedValue
     private int id;

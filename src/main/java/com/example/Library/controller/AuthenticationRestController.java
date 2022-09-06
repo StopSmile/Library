@@ -1,6 +1,7 @@
-package com.example.Library.rest;
+package com.example.Library.controller;
 
 
+import com.example.Library.dto.AuthenticationRequestDTO;
 import com.example.Library.model.User;
 import com.example.Library.repositories.UserRepository;
 import com.example.Library.security.JwtTokenProvider;

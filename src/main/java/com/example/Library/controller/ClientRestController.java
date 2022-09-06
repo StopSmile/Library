@@ -1,11 +1,11 @@
-package com.example.Library.rest;
+package com.example.Library.controller;
 
 import com.example.Library.exceptions.BookAlreadyInLibrary;
 import com.example.Library.exceptions.BookAlreadyInUse;
 import com.example.Library.exceptions.BookNotFoundByIdException;
 import com.example.Library.exceptions.BookNotFoundByTitleException;
 import com.example.Library.model.Book;
-import com.example.Library.model.enums.BookStatus;
+import com.example.Library.enums.BookStatus;
 import com.example.Library.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

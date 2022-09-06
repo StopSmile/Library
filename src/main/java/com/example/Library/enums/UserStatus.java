@@ -1,4 +1,4 @@
-package com.example.Library.model.enums;
+package com.example.Library.enums;
 
 public enum UserStatus {
     ACTIVE,BANNED

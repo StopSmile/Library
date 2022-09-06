@@ -1,8 +1,7 @@
 package com.example.Library.security;
 
 import com.example.Library.model.User;
-import com.example.Library.model.enums.Role;
-import com.example.Library.model.enums.UserStatus;
+import com.example.Library.enums.UserStatus;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

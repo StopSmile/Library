@@ -43,5 +43,11 @@ public class BookExceptionsHandler {
     String incorrectLanguageExceptionHandler(IncorrectLanguageException ex){
         return ex.getMessage();
     }
+    @ResponseBody
+    @ExceptionHandler(InvalidEmailOrPassword.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    String InvalidEmailOrPassword(InvalidEmailOrPassword ex){
+        return ex.getMessage();
+    }
 
 }

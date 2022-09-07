@@ -1,6 +1,8 @@
 package com.example.Library.services;
 
 import com.example.Library.dto.AuthenticationRequestDTO;
+import com.example.Library.dto.AuthenticationResponseDTO;
+import com.example.Library.exceptions.InvalidEmailOrPassword;
 import com.example.Library.model.User;
 import com.example.Library.repositories.UserRepository;
 import com.example.Library.security.JwtTokenProvider;
@@ -20,29 +22,25 @@ import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class AuthenticationService {
-
     public AuthenticationService(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
-
     private final AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private JwtTokenProvider jwtTokenProvider;
-
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    public AuthenticationResponseDTO authenticate(@RequestBody AuthenticationRequestDTO request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
             User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
             String token = jwtTokenProvider.createToken(request.getEmail(), user.getRole().name());
-            return ResponseEntity.ok(new AuthenticationRequestDTO(request.getEmail(), token));
+            return new AuthenticationResponseDTO(request.getEmail(), token);
 
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
+            return new AuthenticationResponseDTO("Invalid email/password combination", "FORBIDDEN403");
         }
     }
-
     public void logout(HttpServletRequest request, HttpServletResponse response) {
 
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();

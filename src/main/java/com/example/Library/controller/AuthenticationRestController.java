@@ -2,6 +2,7 @@ package com.example.Library.controller;
 
 
 import com.example.Library.dto.AuthenticationRequestDTO;
+import com.example.Library.dto.AuthenticationResponseDTO;
 import com.example.Library.model.User;
 import com.example.Library.services.AuthenticationService;
 import org.springframework.http.HttpStatus;
@@ -21,18 +22,14 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationRestController {
-
     private final AuthenticationService authenticationService;
-
     public AuthenticationRestController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
-
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
+    public AuthenticationResponseDTO authenticate(@RequestBody AuthenticationRequestDTO request) {
         return authenticationService.authenticate(request);
     }
-
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         authenticationService.logout(request,response);

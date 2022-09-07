@@ -3,6 +3,7 @@ package com.example.Library.services;
 import com.example.Library.dto.AuthenticationRequestDTO;
 import com.example.Library.dto.AuthenticationResponseDTO;
 import com.example.Library.exceptions.InvalidEmailOrPassword;
+import com.example.Library.exceptions.JwtAuthenticationException;
 import com.example.Library.model.User;
 import com.example.Library.repositories.UserRepository;
 import com.example.Library.security.JwtTokenProvider;
@@ -38,7 +39,7 @@ public class AuthenticationService {
             return new AuthenticationResponseDTO(request.getEmail(), token);
 
         } catch (AuthenticationException e) {
-            return new AuthenticationResponseDTO("Invalid email/password combination", "FORBIDDEN403");
+            throw new InvalidEmailOrPassword(request.getEmail(), request.getPassword());
         }
     }
     public void logout(HttpServletRequest request, HttpServletResponse response) {

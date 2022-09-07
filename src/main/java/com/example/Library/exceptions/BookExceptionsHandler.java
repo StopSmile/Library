@@ -45,7 +45,7 @@ public class BookExceptionsHandler {
     }
     @ResponseBody
     @ExceptionHandler(InvalidEmailOrPassword.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     String InvalidEmailOrPassword(InvalidEmailOrPassword ex){
         return ex.getMessage();
     }

@@ -1,7 +1,6 @@
 package com.example.Library.model;
 
-import com.example.Library.model.enums.BookStatus;
-import com.example.Library.model.enums.Language;
+import com.example.Library.enums.BookStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

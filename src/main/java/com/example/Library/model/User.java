@@ -1,11 +1,8 @@
 package com.example.Library.model;
 
-import com.example.Library.model.enums.Gender;
-import com.example.Library.model.enums.Role;
-import com.example.Library.model.enums.UserStatus;
-import lombok.AllArgsConstructor;
+import com.example.Library.enums.Role;
+import com.example.Library.enums.UserStatus;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -33,13 +30,5 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserStatus userStatus;
 
-
-
-
-//    @ElementCollection(targetClass = Role.class)
-//    @CollectionTable(name = "person_role", joinColumns = @JoinColumn(name = "person_id"))
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "role_name")
-//    private Set<Role> skillSet;
 
 }

@@ -1,4 +1,4 @@
-package com.example.Library.rest;
+package com.example.Library.dto;
 
 import lombok.Data;
 

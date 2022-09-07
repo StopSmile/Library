@@ -1,6 +1,7 @@
 package com.example.Library.security;
 
 
+import com.example.Library.exceptions.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

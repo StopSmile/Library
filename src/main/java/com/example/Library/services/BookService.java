@@ -8,16 +8,31 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class BookService  {
+public class BookService {
 
-    private final  BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
     @Autowired
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
-    public Optional<Book> getBookById(long id){
+    public Optional<Book> findById(long id) {
         return bookRepository.findById(id);
+    }
+
+    public Optional<Book> getBookByTitle(String title) {
+        return bookRepository.getBookByTitle(title);
+    }
+
+    public Iterable<Book> findAll() {
+        return bookRepository.findAll();
+    }
+
+    public Book save(Book entity) {
+        return bookRepository.save(entity);
+    }
+    public void deleteById(long id){
+        bookRepository.deleteById(id);
     }
 }

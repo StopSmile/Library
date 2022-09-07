@@ -3,8 +3,8 @@ package com.example.Library.controller;
 
 import com.example.Library.dto.AuthenticationRequestDTO;
 import com.example.Library.model.User;
-import com.example.Library.repositories.UserRepository;
 import com.example.Library.security.JwtTokenProvider;
+import com.example.Library.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,14 +26,14 @@ import java.util.Map;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationRestController {
 
-    public AuthenticationRestController(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationRestController(AuthenticationManager authenticationManager, UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     private final AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
+    private UserService userService;
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
@@ -41,7 +41,7 @@ public class AuthenticationRestController {
         try {
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
-            User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new UsernameNotFoundException("User doesn't exist"));
+            User user = userService.findByEmail(request.getEmail()).orElseThrow(()-> new UsernameNotFoundException("User doesn't exist"));
             String token = jwtTokenProvider.createToken(request.getEmail(),user.getRole().name());
             Map<Object,Object> response = new HashMap<>();
             response.put("email",request.getEmail());

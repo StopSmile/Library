@@ -2,12 +2,11 @@ package com.example.Library.controller;
 
 
 import com.example.Library.dto.AuthenticationRequestDTO;
+import com.example.Library.dto.AuthenticationResponseDTO;
 import com.example.Library.model.User;
-import com.example.Library.repositories.UserRepository;
-import com.example.Library.security.JwtTokenProvider;
+import com.example.Library.services.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,45 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationRestController {
-
-    public AuthenticationRestController(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
+    private final AuthenticationService authenticationService;
+    public AuthenticationRestController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
-
-    private final AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private JwtTokenProvider jwtTokenProvider;
-
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request){
-        try {
-
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
-            User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new UsernameNotFoundException("User doesn't exist"));
-            String token = jwtTokenProvider.createToken(request.getEmail(),user.getRole().name());
-            Map<Object,Object> response = new HashMap<>();
-            response.put("email",request.getEmail());
-            response.put("token",token);
-            return ResponseEntity.ok(response);
-
-
-        }catch (AuthenticationException e){
-            return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
-        }
+    public AuthenticationResponseDTO authenticate(@RequestBody AuthenticationRequestDTO request) {
+        return authenticationService.authenticate(request);
     }
-
     @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response){
-
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(request,response,null);
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        authenticationService.logout(request,response);
     }
 }

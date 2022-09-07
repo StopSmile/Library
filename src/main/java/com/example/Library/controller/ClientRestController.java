@@ -6,8 +6,7 @@ import com.example.Library.exceptions.BookNotFoundByIdException;
 import com.example.Library.exceptions.BookNotFoundByTitleException;
 import com.example.Library.model.Book;
 import com.example.Library.enums.BookStatus;
-import com.example.Library.repositories.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.Library.services.BookService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,52 +18,53 @@ import java.util.Optional;
 public class ClientRestController {
 
 
-    private final BookRepository bookRepository;
 
-    @Autowired
-    public ClientRestController(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    private final BookService bookService;
+
+    public ClientRestController(BookService bookService) {
+        this.bookService = bookService;
     }
+
     @PreAuthorize("hasAuthority('user:client')")
     @GetMapping("/getAllBook")
     public ArrayList<Book> getAll(){
-        return (ArrayList<Book>) bookRepository.findAll();
+        return (ArrayList<Book>) bookService.getAllBooks();
     }
     @PreAuthorize("hasAuthority('user:client')")
     @GetMapping("/getBookByTitle/{title}")
     public Book getBookByTitle(@PathVariable String title) {
-        return bookRepository.getBookByTitle(title)
+        return bookService.getBookByTitle(title)
                 .orElseThrow(() -> new BookNotFoundByTitleException(title));
     }
     @PreAuthorize("hasAuthority('user:client')")
     @PutMapping("/takeBook/{id}")
     public Optional<Book> takeBook(@PathVariable Long id) {
-        if (bookRepository.findById(id).isEmpty()) {
+        if (bookService.getBookById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
-        if (bookRepository.findById(id).get().getBookStatus().equals(BookStatus.NOT_IN_THE_LIBRARY)) {
+        if (bookService.getBookById(id).get().getBookStatus().equals(BookStatus.NOT_IN_THE_LIBRARY)) {
             throw new BookAlreadyInUse(id);
         }
-        return bookRepository.findById(id)
+        return bookService.getBookById(id)
                 .map(book -> {
                     book.setBookStatus(BookStatus.NOT_IN_THE_LIBRARY);
-                    return bookRepository.save(book);
+                    return bookService.addBook(book);
                 });
     }
     @PreAuthorize("hasAuthority('user:client')")
     @PutMapping("/returnBook/{id}")
     public Optional<Book> returnTheBook(@PathVariable Long id) {
-        if (bookRepository.findById(id).isEmpty()) {
+        if (bookService.getBookById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
-        if (bookRepository.findById(id).get().getBookStatus().equals(BookStatus.IN_THE_LIBRARY)) {
+        if (bookService.getBookById(id).get().getBookStatus().equals(BookStatus.IN_THE_LIBRARY)) {
             throw new BookAlreadyInLibrary(id);
         }
 
-        return bookRepository.findById(id)
+        return bookService.getBookById(id)
                 .map(book -> {
                     book.setBookStatus(BookStatus.IN_THE_LIBRARY);
-                    return bookRepository.save(book);
+                    return bookService.addBook(book);
                 });
 
     }

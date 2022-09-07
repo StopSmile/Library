@@ -26,7 +26,7 @@ public class GuestRestController {
 
     @GetMapping("/getAllBook")
     public ArrayList<Book> getAll(){
-        return (ArrayList<Book>) bookService.findAll();
+        return (ArrayList<Book>) bookService.getAllBooks();
     }
 
     @GetMapping("/getBookByTitle/{title}")

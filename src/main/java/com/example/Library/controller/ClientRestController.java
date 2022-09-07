@@ -28,7 +28,7 @@ public class ClientRestController {
     @PreAuthorize("hasAuthority('user:client')")
     @GetMapping("/getAllBook")
     public ArrayList<Book> getAll(){
-        return (ArrayList<Book>) bookService.findAll();
+        return (ArrayList<Book>) bookService.getAllBooks();
     }
     @PreAuthorize("hasAuthority('user:client')")
     @GetMapping("/getBookByTitle/{title}")
@@ -39,32 +39,32 @@ public class ClientRestController {
     @PreAuthorize("hasAuthority('user:client')")
     @PutMapping("/takeBook/{id}")
     public Optional<Book> takeBook(@PathVariable Long id) {
-        if (bookService.findById(id).isEmpty()) {
+        if (bookService.getBookById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
-        if (bookService.findById(id).get().getBookStatus().equals(BookStatus.NOT_IN_THE_LIBRARY)) {
+        if (bookService.getBookById(id).get().getBookStatus().equals(BookStatus.NOT_IN_THE_LIBRARY)) {
             throw new BookAlreadyInUse(id);
         }
-        return bookService.findById(id)
+        return bookService.getBookById(id)
                 .map(book -> {
                     book.setBookStatus(BookStatus.NOT_IN_THE_LIBRARY);
-                    return bookService.save(book);
+                    return bookService.addBook(book);
                 });
     }
     @PreAuthorize("hasAuthority('user:client')")
     @PutMapping("/returnBook/{id}")
     public Optional<Book> returnTheBook(@PathVariable Long id) {
-        if (bookService.findById(id).isEmpty()) {
+        if (bookService.getBookById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
-        if (bookService.findById(id).get().getBookStatus().equals(BookStatus.IN_THE_LIBRARY)) {
+        if (bookService.getBookById(id).get().getBookStatus().equals(BookStatus.IN_THE_LIBRARY)) {
             throw new BookAlreadyInLibrary(id);
         }
 
-        return bookService.findById(id)
+        return bookService.getBookById(id)
                 .map(book -> {
                     book.setBookStatus(BookStatus.IN_THE_LIBRARY);
-                    return bookService.save(book);
+                    return bookService.addBook(book);
                 });
 
     }

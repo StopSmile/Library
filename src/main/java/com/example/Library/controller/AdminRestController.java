@@ -25,7 +25,7 @@ public class AdminRestController {
     @GetMapping("/getAllBook")
     @PreAuthorize("hasAuthority('user:admin')")
     public ArrayList<Book> getAllBook() {
-        return (ArrayList<Book>) bookService.findAll();
+        return (ArrayList<Book>) bookService.getAllBooks();
     }
 
     @PreAuthorize("hasAuthority('user:admin')")
@@ -37,7 +37,7 @@ public class AdminRestController {
     @PreAuthorize("hasAuthority('user:admin')")
     @GetMapping("/getBookById/{id}")
     public Book getBookById(@PathVariable long id) {
-        return bookService.findById(id)
+        return bookService.getBookById(id)
                 .orElseThrow(() -> new BookNotFoundByIdException(id));
     }
 
@@ -64,54 +64,31 @@ public class AdminRestController {
         if (language.equals("ENG")) {
             book.setLanguage(new Language(2, "ENGLISH"));
         }
-        return bookService.save(book);
+        return bookService.addBook(book);
     }
 
     @PreAuthorize("hasAuthority('user:admin')")
     @PostMapping("/addBook2")
     public Book addBook2(@RequestBody Book newBook) {
 
-        return bookService.save(newBook);
+        return bookService.addBook(newBook);
     }
     @PreAuthorize("hasAuthority('user:admin')")
     @DeleteMapping("/deleteBook/{id}")
     public void deleteBookById(@PathVariable long id) {
-        if (bookService.findById(id).isEmpty()) {
+        if (bookService.getBookById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
-        bookService.deleteById(id);
+        bookService.deleteBookById(id);
     }
     @PreAuthorize("hasAuthority('user:admin')")
     @PutMapping("/takeBook/{id}")
     public Optional<Book> takeBook(@PathVariable long id) {
-
-        if (bookService.findById(id).isEmpty()) {
-            throw new BookNotFoundByIdException(id);
-        }
-        if (bookService.findById(id).get().getBookStatus().equals(BookStatus.NOT_IN_THE_LIBRARY)) {
-            throw new BookAlreadyInUse(id);
-        }
-        return bookService.findById(id)
-                .map(book -> {
-                    book.setBookStatus(BookStatus.NOT_IN_THE_LIBRARY);
-                    return bookService.save(book);
-                });
+        return bookService.takeBook(id);
     }
     @PreAuthorize("hasAuthority('user:admin')")
     @PutMapping("/returnBook/{id}")
     public Optional<Book> returnTheBook(@PathVariable long id) {
-        if (bookService.findById(id).isEmpty()) {
-            throw new BookNotFoundByIdException(id);
-        }
-        if (bookService.findById(id).get().getBookStatus().equals(BookStatus.IN_THE_LIBRARY)) {
-            throw new BookAlreadyInLibrary(id);
-        }
-
-        return bookService.findById(id)
-                .map(book -> {
-                    book.setBookStatus(BookStatus.IN_THE_LIBRARY);
-                    return bookService.save(book);
-                });
-
+        return bookService.returnBook(id);
     }
 }

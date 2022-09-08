@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/Books")
+@RequestMapping("/api/v1/books")
 public class BooksController {
 
     private final BookService bookService;
@@ -39,7 +39,7 @@ public class BooksController {
     }
 
     @PreAuthorize("hasAuthority('user:guest')")
-    @GetMapping("getBookByTitle/{title}")
+    @GetMapping("/getBookByTitle/{title}")
     public Book getBookByTitle(@PathVariable String title) {
         return bookService.getBookByTitle(title)
                 .orElseThrow(() -> new BookNotFoundByTitleException(title));
@@ -72,7 +72,7 @@ public class BooksController {
     }
 
     @PreAuthorize("hasAuthority('user:admin')")
-    @PostMapping("/addBook2")
+    @PostMapping("/full")
     public Book addBook2(@RequestBody Book newBook) {
         return bookService.addBook(newBook);
     }

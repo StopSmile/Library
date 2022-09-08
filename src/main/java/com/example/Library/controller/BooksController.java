@@ -1,8 +1,10 @@
 package com.example.Library.controller;
 
-import com.example.Library.exceptions.*;
-import com.example.Library.model.Book;
 import com.example.Library.enums.BookStatus;
+import com.example.Library.exceptions.BookNotFoundByIdException;
+import com.example.Library.exceptions.BookNotFoundByTitleException;
+import com.example.Library.exceptions.IncorrectLanguageException;
+import com.example.Library.model.Book;
 import com.example.Library.model.Language;
 import com.example.Library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,36 +15,38 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/Admins")
-public class AdminRestController {
+@RequestMapping("/api/v1/books")
+public class BooksController {
+
     private final BookService bookService;
 
     @Autowired
-    public AdminRestController(BookService bookService) {
+    public BooksController(BookService bookService) {
         this.bookService = bookService;
     }
 
-    @GetMapping("/getAllBook")
-    @PreAuthorize("hasAuthority('user:admin')")
+    @PreAuthorize("hasAuthority('user:guest')")
+    @GetMapping()
     public ArrayList<Book> getAllBook() {
         return (ArrayList<Book>) bookService.getAllBooks();
     }
 
-    @PreAuthorize("hasAuthority('user:admin')")
-    @GetMapping("/getBookByTitle/{title}")
-    public Book getBookByTitle(@PathVariable String title) {
-        return bookService.getBookByTitle(title)
-                .orElseThrow(() -> new BookNotFoundByTitleException(title));
-    }
-    @PreAuthorize("hasAuthority('user:admin')")
-    @GetMapping("/getBookById/{id}")
+    @PreAuthorize("hasAuthority('user:guest')")
+    @GetMapping("/{id}")
     public Book getBookById(@PathVariable long id) {
         return bookService.getBookById(id)
                 .orElseThrow(() -> new BookNotFoundByIdException(id));
     }
 
+    @PreAuthorize("hasAuthority('user:guest')")
+    @GetMapping("/getBookByTitle/{title}")
+    public Book getBookByTitle(@PathVariable String title) {
+        return bookService.getBookByTitle(title)
+                .orElseThrow(() -> new BookNotFoundByTitleException(title));
+    }
+
     @PreAuthorize("hasAuthority('user:admin')")
-    @PostMapping("/addBook")
+    @PostMapping()
     public Book addBook(@RequestParam(value = "title") String title,
                         @RequestParam(value = "author") String author,
                         @RequestParam(value = "pages") int pages,
@@ -68,25 +72,27 @@ public class AdminRestController {
     }
 
     @PreAuthorize("hasAuthority('user:admin')")
-    @PostMapping("/addBook2")
+    @PostMapping("/full")
     public Book addBook2(@RequestBody Book newBook) {
-
         return bookService.addBook(newBook);
     }
+
     @PreAuthorize("hasAuthority('user:admin')")
-    @DeleteMapping("/deleteBook/{id}")
+    @DeleteMapping("/{id}")
     public void deleteBookById(@PathVariable long id) {
         if (bookService.getBookById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
         bookService.deleteBookById(id);
     }
-    @PreAuthorize("hasAuthority('user:admin')")
+
+    @PreAuthorize("hasAuthority('user:client')")
     @PutMapping("/takeBook/{id}")
     public Optional<Book> takeBook(@PathVariable long id) {
         return bookService.takeBook(id);
     }
-    @PreAuthorize("hasAuthority('user:admin')")
+
+    @PreAuthorize("hasAuthority('user:client')")
     @PutMapping("/returnBook/{id}")
     public Optional<Book> returnTheBook(@PathVariable long id) {
         return bookService.returnBook(id);

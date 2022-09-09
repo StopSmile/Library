@@ -4,13 +4,15 @@ import com.example.Library.enums.BookStatus;
 import com.example.Library.exceptions.BookAlreadyInLibrary;
 import com.example.Library.exceptions.BookAlreadyInUse;
 import com.example.Library.exceptions.BookNotFoundByIdException;
+import com.example.Library.exceptions.BookNotFoundByTitleException;
 import com.example.Library.model.Book;
 import com.example.Library.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BookService {
@@ -26,8 +28,8 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public Optional<Book> getBookByTitle(String title) {
-        return bookRepository.getBookByTitle(title);
+    public Iterable<Book> getBooksByTitle(String title) {
+        return bookRepository.getBooksByTitle(title);
     }
 
     public Iterable<Book> getAllBooks() {
@@ -37,9 +39,11 @@ public class BookService {
     public Book addBook(Book entity) {
         return bookRepository.save(entity);
     }
-    public void deleteBookById(long id){
+
+    public void deleteBookById(long id) {
         bookRepository.deleteById(id);
     }
+
     public Optional<Book> takeBook(long id) {
 
         if (bookRepository.findById(id).isEmpty()) {
@@ -55,7 +59,7 @@ public class BookService {
                 });
     }
 
-    public Optional<Book> returnBook(long id){
+    public Optional<Book> returnBook(long id) {
         if (bookRepository.findById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
@@ -68,5 +72,17 @@ public class BookService {
                     book.setBookStatus(BookStatus.IN_THE_LIBRARY);
                     return bookRepository.save(book);
                 });
+    }
+
+    public Iterable<Book> getAllBooksWithFilterByTitle(String title) {
+        if (title != null) {
+            ArrayList<Book> books = (ArrayList<Book>) bookRepository.getBooksByTitle(title);
+            if (books.size()==0){
+                throw new BookNotFoundByTitleException(title);
+            }else {
+                return books;
+            }
+        }
+        return bookRepository.findAll();
     }
 }

@@ -27,22 +27,15 @@ public class BooksController {
 
     @PreAuthorize("hasAuthority('user:guest')")
     @GetMapping()
-    public ArrayList<Book> getAllBook() {
-        return (ArrayList<Book>) bookService.getAllBooks();
+    public ArrayList<Book> getAllBook(@RequestParam(value = "title",required = false)String title) {
+        return (ArrayList<Book>) bookService.getAllBooksWithFilterByTitle(title);
     }
 
     @PreAuthorize("hasAuthority('user:guest')")
     @GetMapping("/{id}")
-    public Book getBookById(@PathVariable long id) {
+    public Book getBook(@PathVariable long id) {
         return bookService.getBookById(id)
                 .orElseThrow(() -> new BookNotFoundByIdException(id));
-    }
-
-    @PreAuthorize("hasAuthority('user:guest')")
-    @GetMapping("/getBookByTitle/{title}")
-    public Book getBookByTitle(@PathVariable String title) {
-        return bookService.getBookByTitle(title)
-                .orElseThrow(() -> new BookNotFoundByTitleException(title));
     }
 
     @PreAuthorize("hasAuthority('user:admin')")

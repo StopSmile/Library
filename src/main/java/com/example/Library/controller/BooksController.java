@@ -32,17 +32,9 @@ public class BooksController {
     }
 
     @PreAuthorize("hasAuthority('user:guest')")
-    @GetMapping("/{id}")
-    public Book getBookById(@PathVariable long id) {
-        return bookService.getBookById(id)
-                .orElseThrow(() -> new BookNotFoundByIdException(id));
-    }
-
-    @PreAuthorize("hasAuthority('user:guest')")
-    @GetMapping("/getBookByTitle/{title}")
-    public Book getBookByTitle(@PathVariable String title) {
-        return bookService.getBookByTitle(title)
-                .orElseThrow(() -> new BookNotFoundByTitleException(title));
+    @GetMapping("/{idOrTitle}")
+    public Book getBook(@PathVariable String idOrTitle) {
+        return bookService.filter(idOrTitle);
     }
 
     @PreAuthorize("hasAuthority('user:admin')")

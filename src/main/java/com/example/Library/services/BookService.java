@@ -28,8 +28,8 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public Optional<Book> getBookByTitle(String title) {
-        return bookRepository.getBookByTitle(title);
+    public Iterable<Book> getBooksByTitle(String title) {
+        return bookRepository.getBooksByTitle(title);
     }
 
     public Iterable<Book> getAllBooks() {
@@ -74,24 +74,14 @@ public class BookService {
                 });
     }
 
-    public Book filter(String idOrTitle) {
-        char[] chars = idOrTitle.toCharArray();
-        for (char symbol : chars) {
-            int x = symbol;
-            if ((x >= 97 && x <= 122) || (x >= 65 && x <= 90) || (x >= 1040 && x <= 1071) || (x >= 1073 && x <= 1103)) {
-                return bookRepository.getBookByTitle(idOrTitle)
-                        .orElseThrow(() -> new BookNotFoundByTitleException(idOrTitle));
-            }
-        }
-        long id = Long.parseLong(idOrTitle);
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundByIdException(id));
-    }
-
     public Iterable<Book> getAllBooksWithFilterByTitle(String title) {
         if (title != null) {
-            return new ArrayList<>(Set.of(bookRepository.getBookByTitle(title)
-                    .orElseThrow(() -> new BookNotFoundByTitleException(title))));
+            ArrayList<Book> books = (ArrayList<Book>) bookRepository.getBooksByTitle(title);
+            if (books.size()==0){
+                throw new BookNotFoundByTitleException(title);
+            }else {
+                return books;
+            }
         }
         return bookRepository.findAll();
     }

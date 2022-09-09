@@ -33,8 +33,9 @@ public class BooksController {
 
     @PreAuthorize("hasAuthority('user:guest')")
     @GetMapping("/{id}")
-    public Optional<Book> getBook(@PathVariable long id) {
-        return bookService.getBookById(id);
+    public Book getBook(@PathVariable long id) {
+        return bookService.getBookById(id)
+                .orElseThrow(() -> new BookNotFoundByIdException(id));
     }
 
     @PreAuthorize("hasAuthority('user:admin')")

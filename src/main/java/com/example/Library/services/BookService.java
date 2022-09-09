@@ -10,7 +10,9 @@ import com.example.Library.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BookService {
@@ -84,5 +86,13 @@ public class BookService {
         long id = Long.parseLong(idOrTitle);
         return bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundByIdException(id));
+    }
+
+    public Iterable<Book> getAllBooksWithFilterByTitle(String title) {
+        if (title != null) {
+            return new ArrayList<>(Set.of(bookRepository.getBookByTitle(title)
+                    .orElseThrow(() -> new BookNotFoundByTitleException(title))));
+        }
+        return bookRepository.findAll();
     }
 }

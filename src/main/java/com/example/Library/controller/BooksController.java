@@ -8,6 +8,9 @@ import com.example.Library.model.Book;
 import com.example.Library.model.Language;
 import com.example.Library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +30,10 @@ public class BooksController {
 
     @PreAuthorize("hasAuthority('user:guest')")
     @GetMapping()
-    public ArrayList<Book> getAllBook(@RequestParam(value = "title",required = false)String title) {
-        return (ArrayList<Book>) bookService.getAllBooksWithFilterByTitle(title);
+    public Page<Book> getAllBook(@RequestParam (value = "title", required = false)String title,
+                                 @RequestParam (value = "page", required = false)Optional<Integer> page,
+                                 @RequestParam (value = "sortBy", required = false)Optional<String> sortBy) {
+        return bookService.getAllBooksWithFilterByTitle(page,sortBy,title);
     }
 
     @PreAuthorize("hasAuthority('user:guest')")
@@ -45,7 +50,7 @@ public class BooksController {
                         @RequestParam(value = "pages") int pages,
                         @RequestParam(value = "language") String language) {
 
-        if (!language.equals("UA") && !language.equals("ENG")){
+        if (!language.equals("UA") && !language.equals("ENG")) {
             throw new IncorrectLanguageException(language);
         }
 

@@ -8,11 +8,14 @@ import com.example.Library.exceptions.BookNotFoundByTitleException;
 import com.example.Library.model.Book;
 import com.example.Library.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class BookService {
@@ -45,7 +48,6 @@ public class BookService {
     }
 
     public Optional<Book> takeBook(long id) {
-
         if (bookRepository.findById(id).isEmpty()) {
             throw new BookNotFoundByIdException(id);
         }
@@ -74,15 +76,17 @@ public class BookService {
                 });
     }
 
-    public Iterable<Book> getAllBooksWithFilterByTitle(String title) {
+    public Page<Book> getAllBooksWithFilterByTitle(Optional<Integer> page, Optional<String> sortBy, String title) {
+
         if (title != null) {
             ArrayList<Book> books = (ArrayList<Book>) bookRepository.getBooksByTitle(title);
-            if (books.size()==0){
+            if (books.size() == 0) {
                 throw new BookNotFoundByTitleException(title);
-            }else {
-                return books;
+            } else {
+                return new PageImpl<>(books);
             }
         }
-        return bookRepository.findAll();
+        return bookRepository.findAll(PageRequest.of(page.orElse(0), 5,
+                Sort.Direction.ASC, sortBy.orElse("id")));
     }
 }

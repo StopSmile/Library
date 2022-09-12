@@ -21,6 +21,8 @@ import java.util.Optional;
 @RequestMapping("/api/v1/books")
 public class BooksController {
 
+    private final static int START_PAGE_BY_DEFAULT = 0;
+    private final static String SORT_BY_DEFAULT_FIELD = "id";
     private final BookService bookService;
 
     @Autowired
@@ -30,10 +32,13 @@ public class BooksController {
 
     @PreAuthorize("hasAuthority('user:guest')")
     @GetMapping()
-    public Page<Book> getAllBook(@RequestParam(value = "title", required = false) String title,
-                                 @RequestParam(value = "page", required = false) Integer page,
-                                 @RequestParam(value = "sortBy", required = false) String sortBy) {
-        return bookService.getAllBooksWithFilterByTitle(page, sortBy, title);
+    public Page<Book> getAllBook(@RequestParam(value = "title") Optional<String> title,
+                                 @RequestParam(value = "page") Optional<Integer> page,
+                                 @RequestParam(value = "sortBy") Optional<String> sortBy) {
+        if (title.isPresent()){
+            return bookService.getBookByTitle(title.get());
+        }
+        return bookService.getAllBooksInPages(page.orElse(START_PAGE_BY_DEFAULT),sortBy.orElse(SORT_BY_DEFAULT_FIELD));
     }
 
     @PreAuthorize("hasAuthority('user:guest')")

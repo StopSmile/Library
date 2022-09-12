@@ -20,8 +20,7 @@ import java.util.Optional;
 @Service
 public class BookService {
 
-    private final static Integer pageSize = 5;
-    private final static Integer startPageByDefault = 0;
+    private final static Integer PAGE_SIZE = 5;
     private final BookRepository bookRepository;
 
     @Autowired
@@ -78,26 +77,16 @@ public class BookService {
                 });
     }
 
-    public Page<Book> getAllBooksWithFilterByTitle(Integer page, String sortBy, String title) {
+    public Page<Book> getAllBooksInPages(Integer page, String sortBy) {
+        return bookRepository.findAll(PageRequest.of(page, PAGE_SIZE, Sort.Direction.ASC, sortBy));
+    }
 
-        if (title != null) {
-            ArrayList<Book> books = (ArrayList<Book>) bookRepository.getBooksByTitle(title);
-            if (books.size() == 0) {
-                throw new BookNotFoundByTitleException(title);
-            } else {
-                return new PageImpl<>(books);
-            }
+    public Page<Book> getBookByTitle(String title) {
+        ArrayList<Book> books = (ArrayList<Book>) bookRepository.getBooksByTitle(title);
+        if (books.size() == 0) {
+            throw new BookNotFoundByTitleException(title);
+        } else {
+            return new PageImpl<>(books);
         }
-        if (page == null && sortBy == null) {
-            return bookRepository.findAll(PageRequest.of(startPageByDefault, pageSize, Sort.Direction.ASC, "id"));
-        }
-        if (page != null && sortBy == null) {
-            return bookRepository.findAll(PageRequest.of(page, pageSize, Sort.Direction.ASC, "id"));
-        }
-        if (page == null && sortBy != null) {
-            return bookRepository.findAll(PageRequest.of(startPageByDefault, pageSize, Sort.Direction.ASC, sortBy));
-        }
-
-        return bookRepository.findAll(PageRequest.of(page, pageSize, Sort.Direction.ASC, sortBy));
     }
 }

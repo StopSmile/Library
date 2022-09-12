@@ -20,6 +20,8 @@ import java.util.Optional;
 @Service
 public class BookService {
 
+    private final static Integer pageSize = 5;
+    private final static Integer startPageByDefault = 0;
     private final BookRepository bookRepository;
 
     @Autowired
@@ -76,7 +78,7 @@ public class BookService {
                 });
     }
 
-    public Page<Book> getAllBooksWithFilterByTitle(Optional<Integer> page, Optional<String> sortBy, String title) {
+    public Page<Book> getAllBooksWithFilterByTitle(Integer page, String sortBy, String title) {
 
         if (title != null) {
             ArrayList<Book> books = (ArrayList<Book>) bookRepository.getBooksByTitle(title);
@@ -86,7 +88,16 @@ public class BookService {
                 return new PageImpl<>(books);
             }
         }
-        return bookRepository.findAll(PageRequest.of(page.orElse(0), 5,
-                Sort.Direction.ASC, sortBy.orElse("id")));
+        if (page == null && sortBy == null) {
+            return bookRepository.findAll(PageRequest.of(startPageByDefault, pageSize, Sort.Direction.ASC, "id"));
+        }
+        if (page != null && sortBy == null) {
+            return bookRepository.findAll(PageRequest.of(page, pageSize, Sort.Direction.ASC, "id"));
+        }
+        if (page == null && sortBy != null) {
+            return bookRepository.findAll(PageRequest.of(startPageByDefault, pageSize, Sort.Direction.ASC, sortBy));
+        }
+
+        return bookRepository.findAll(PageRequest.of(page, pageSize, Sort.Direction.ASC, sortBy));
     }
 }

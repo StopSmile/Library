@@ -30,10 +30,10 @@ public class BooksController {
 
     @PreAuthorize("hasAuthority('user:guest')")
     @GetMapping()
-    public Page<Book> getAllBook(@RequestParam (value = "title", required = false)String title,
-                                 @RequestParam (value = "page", required = false)Optional<Integer> page,
-                                 @RequestParam (value = "sortBy", required = false)Optional<String> sortBy) {
-        return bookService.getAllBooksWithFilterByTitle(page,sortBy,title);
+    public Page<Book> getAllBook(@RequestParam(value = "title", required = false) String title,
+                                 @RequestParam(value = "page", required = false) Integer page,
+                                 @RequestParam(value = "sortBy", required = false) String sortBy) {
+        return bookService.getAllBooksWithFilterByTitle(page, sortBy, title);
     }
 
     @PreAuthorize("hasAuthority('user:guest')")

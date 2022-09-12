@@ -8,6 +8,9 @@ import com.example.Library.model.Book;
 import com.example.Library.model.Language;
 import com.example.Library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,8 @@ import java.util.Optional;
 @RequestMapping("/api/v1/books")
 public class BooksController {
 
+    private final static int START_PAGE_BY_DEFAULT = 0;
+    private final static String SORT_BY_DEFAULT_FIELD = "id";
     private final BookService bookService;
 
     @Autowired
@@ -27,8 +32,13 @@ public class BooksController {
 
     @PreAuthorize("hasAuthority('user:guest')")
     @GetMapping()
-    public ArrayList<Book> getAllBook(@RequestParam(value = "title",required = false)String title) {
-        return (ArrayList<Book>) bookService.getAllBooksWithFilterByTitle(title);
+    public Page<Book> getAllBook(@RequestParam(value = "title") Optional<String> title,
+                                 @RequestParam(value = "page") Optional<Integer> page,
+                                 @RequestParam(value = "sortBy") Optional<String> sortBy) {
+        if (title.isPresent()){
+            return bookService.getBookByTitle(title.get());
+        }
+        return bookService.getAllBooksInPages(page.orElse(START_PAGE_BY_DEFAULT),sortBy.orElse(SORT_BY_DEFAULT_FIELD));
     }
 
     @PreAuthorize("hasAuthority('user:guest')")
@@ -45,7 +55,7 @@ public class BooksController {
                         @RequestParam(value = "pages") int pages,
                         @RequestParam(value = "language") String language) {
 
-        if (!language.equals("UA") && !language.equals("ENG")){
+        if (!language.equals("UA") && !language.equals("ENG")) {
             throw new IncorrectLanguageException(language);
         }
 

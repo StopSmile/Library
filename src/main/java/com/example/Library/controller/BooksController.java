@@ -30,7 +30,7 @@ public class BooksController {
         this.bookService = bookService;
     }
 
-    @PreAuthorize("hasAuthority('user:guest')")
+    @PreAuthorize("hasAuthority('books:read')")
     @GetMapping()
     public Page<Book> getAllBook(@RequestParam(value = "title") Optional<String> title,
                                  @RequestParam(value = "page") Optional<Integer> page,
@@ -41,14 +41,14 @@ public class BooksController {
         return bookService.getAllBooksInPages(page.orElse(START_PAGE_BY_DEFAULT),sortBy.orElse(SORT_BY_DEFAULT_FIELD));
     }
 
-    @PreAuthorize("hasAuthority('user:guest')")
+    @PreAuthorize("hasAuthority('books:read')")
     @GetMapping("/{id}")
     public Book getBook(@PathVariable long id) {
         return bookService.getBookById(id)
                 .orElseThrow(() -> new BookNotFoundByIdException(id));
     }
 
-    @PreAuthorize("hasAuthority('user:admin')")
+    @PreAuthorize("hasAuthority('books:create')")
     @PostMapping()
     public Book addBook(@RequestParam(value = "title") String title,
                         @RequestParam(value = "author") String author,
@@ -74,13 +74,13 @@ public class BooksController {
         return bookService.addBook(book);
     }
 
-    @PreAuthorize("hasAuthority('user:admin')")
+    @PreAuthorize("hasAuthority('books:create')")
     @PostMapping("/full")
     public Book addBook2(@RequestBody Book newBook) {
         return bookService.addBook(newBook);
     }
 
-    @PreAuthorize("hasAuthority('user:admin')")
+    @PreAuthorize("hasAuthority('books:delete')")
     @DeleteMapping("/{id}")
     public void deleteBookById(@PathVariable long id) {
         if (bookService.getBookById(id).isEmpty()) {
@@ -89,13 +89,13 @@ public class BooksController {
         bookService.deleteBookById(id);
     }
 
-    @PreAuthorize("hasAuthority('user:client')")
+    @PreAuthorize("hasAuthority('books:update')")
     @PutMapping("/takeBook/{id}")
     public Optional<Book> takeBook(@PathVariable long id) {
         return bookService.takeBook(id);
     }
 
-    @PreAuthorize("hasAuthority('user:client')")
+    @PreAuthorize("hasAuthority('books:update')")
     @PutMapping("/returnBook/{id}")
     public Optional<Book> returnTheBook(@PathVariable long id) {
         return bookService.returnBook(id);

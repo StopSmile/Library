@@ -1,10 +1,11 @@
 package com.example.Library.enums;
 
 public enum Permission {
+    BOOKS_CREATE("books:create"),
+    BOOKS_READ("books:read"),
+    BOOKS_UPDATE("book:update"),
+    BOOKS_DELETE("books:delete");
 
-    PERMISSION_ADMIN("user:admin"),
-    PERMISSION_CLIENT("user:client"),
-    PERMISSION_GUEST("user:guest");
 
     private final String permission;
 

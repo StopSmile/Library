@@ -1,6 +1,7 @@
 package com.example.Library.security;
 
 import com.example.Library.exceptions.JwtAuthenticationException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Log4j2
 public class JwtTokenFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -37,6 +39,7 @@ public class JwtTokenFilter extends GenericFilterBean {
         }catch (JwtAuthenticationException e){
             SecurityContextHolder.clearContext();
             ((HttpServletResponse) servletResponse).sendError(e.getHttpStatus().value());
+            log.error("JWT token is expired or invalid");
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
         filterChain.doFilter(servletRequest,servletResponse);

@@ -7,6 +7,7 @@ import com.example.Library.exceptions.JwtAuthenticationException;
 import com.example.Library.model.User;
 import com.example.Library.repositories.UserRepository;
 import com.example.Library.security.JwtTokenProvider;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
+@Log4j2
 public class AuthenticationService {
     public AuthenticationService(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
@@ -39,6 +41,7 @@ public class AuthenticationService {
             return new AuthenticationResponseDTO(request.getEmail(), token);
 
         } catch (AuthenticationException e) {
+            log.error("Invalid email/password combination : " + request.getEmail() + " " + request.getPassword());
             throw new InvalidEmailOrPassword(request.getEmail(), request.getPassword());
         }
     }

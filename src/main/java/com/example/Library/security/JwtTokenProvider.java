@@ -61,7 +61,7 @@ public class JwtTokenProvider {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            log.error("Jwt token is expired or invalid. HttpStatus 401");
+            log.error("Jwt token is expired or invalid. HttpStatus 401",e);
             throw new JwtAuthenticationException("Jwt token is expired or invalid", HttpStatus.UNAUTHORIZED);
         }
     }
@@ -84,7 +84,7 @@ public class JwtTokenProvider {
         if (authorizationHeaderValue.startsWith(BEARER_PREFIX)) {
             return authorizationHeaderValue.substring(BEARER_PREFIX.length());
         } else {
-            log.error("Invalid JWT. HttpStatus 401");
+            log.error("Invalid JWT. HttpStatus 401",new JwtAuthenticationException("Invalid JWT", HttpStatus.UNAUTHORIZED));
             throw new JwtAuthenticationException("Invalid JWT", HttpStatus.UNAUTHORIZED);
         }
     }

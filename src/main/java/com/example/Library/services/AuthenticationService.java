@@ -39,13 +39,17 @@ public class AuthenticationService {
     public AuthenticationResponseDTO authenticate(@RequestBody AuthenticationRequestDTO request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-            Optional<User> user = userRepository.findByEmail(request.getEmail());
-            String token = jwtTokenProvider.createToken(request.getEmail(), user.get().getRole().name());
-            return new AuthenticationResponseDTO(request.getEmail(), token);
         } catch (AuthenticationException e) {
             log.error("Invalid email/password combination", e);
             throw new InvalidEmailOrPassword(request.getEmail(), request.getPassword());
         }
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if (user.isPresent()) {
+            String token = jwtTokenProvider.createToken(request.getEmail(), user.get().getRole().name());
+            return new AuthenticationResponseDTO(request.getEmail(), token);
+        }
+        log.error("User doesn't exist {}", request.getEmail());
+        throw new UsernameNotFoundException("User doesn't exist");
     }
     public void logout(HttpServletRequest request, HttpServletResponse response) {
 

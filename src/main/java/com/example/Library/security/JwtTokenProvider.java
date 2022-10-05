@@ -3,6 +3,7 @@ package com.example.Library.security;
 
 import com.example.Library.exceptions.JwtAuthenticationException;
 import io.jsonwebtoken.*;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
+@Log4j2
 public class JwtTokenProvider {
 
 
@@ -59,6 +61,7 @@ public class JwtTokenProvider {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
+            log.error("Jwt token is expired or invalid. HttpStatus 401", e);
             throw new JwtAuthenticationException("Jwt token is expired or invalid", HttpStatus.UNAUTHORIZED);
         }
     }
@@ -67,6 +70,7 @@ public class JwtTokenProvider {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUserName(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
+
     public String getUserName(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
@@ -74,15 +78,16 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         return extractJwtFromBearer(request.getHeader(authorizationHeader));
     }
+
     public String extractJwtFromBearer(String authorizationHeaderValue) {
-        if (authorizationHeaderValue == null){
+        if (authorizationHeaderValue == null) {
             return null;
         }
         if (authorizationHeaderValue.startsWith(BEARER_PREFIX)) {
             return authorizationHeaderValue.substring(BEARER_PREFIX.length());
-        } else {
-            throw new JwtAuthenticationException("Invalid JWT", HttpStatus.UNAUTHORIZED);
         }
+        log.error("Invalid JWT. HttpStatus 401");
+        throw new JwtAuthenticationException("Invalid JWT", HttpStatus.UNAUTHORIZED);
     }
 }
 

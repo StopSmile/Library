@@ -31,10 +31,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             return SecurityUser.fromUser(user.get());
-        } else {
-            log.error("User doesn't exists",new UsernameNotFoundException("User doesn't exists"));
-            throw new UsernameNotFoundException("User doesn't exists");
         }
-
+        log.error("User doesn't exists");
+        throw new UsernameNotFoundException("User doesn't exists");
     }
 }

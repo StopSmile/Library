@@ -3,7 +3,6 @@ package com.example.Library.model;
 import com.example.Library.enums.Role;
 import com.example.Library.enums.UserStatus;
 import lombok.Data;
-
 import javax.persistence.*;
 
 

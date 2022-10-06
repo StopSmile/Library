@@ -3,7 +3,7 @@ package com.example.Library.enums;
 public enum Permission {
     BOOKS_CREATE("books:create"),
     BOOKS_READ("books:read"),
-    BOOKS_UPDATE("book:update"),
+    BOOKS_UPDATE("books:update"),
     BOOKS_DELETE("books:delete");
 
 

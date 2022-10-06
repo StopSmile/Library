@@ -1,4 +1,4 @@
-package com.example.Library.services;
+package com.example.Library.services.impl;
 
 import com.example.Library.model.User;
 import com.example.Library.repositories.UserRepository;
@@ -12,20 +12,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
 @Service("userDetailsServiceImpl")
 @Log4j2
 public class UserDetailsServiceImpl implements UserDetailsService {
-
-
     private final UserRepository userRepository;
-
     @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);

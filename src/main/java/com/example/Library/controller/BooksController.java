@@ -1,11 +1,11 @@
 package com.example.Library.controller;
 
+import com.example.Library.dto.BookDTO;
 import com.example.Library.enums.BookStatus;
 import com.example.Library.exceptions.BookNotFoundByIdException;
 import com.example.Library.exceptions.IncorrectLanguageException;
-import com.example.Library.model.Book;
 import com.example.Library.model.Language;
-import com.example.Library.services.BookService;
+import com.example.Library.services.impl.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,9 @@ public class BooksController {
     @PreAuthorize("hasAuthority('books:read')")
     @GetMapping()
     @Operation(summary = "Get all books in pages. Get book by title.")
-    public Page<Book> getAllBook(@RequestParam(value = "title") Optional<String> title,
-                                 @RequestParam(value = "page") Optional<Integer> page,
-                                 @RequestParam(value = "sortBy") Optional<String> sortBy) {
+    public Page<BookDTO> getAllBooks(@RequestParam(value = "title") Optional<String> title,
+                                     @RequestParam(value = "page") Optional<Integer> page,
+                                     @RequestParam(value = "sortBy") Optional<String> sortBy) {
         log.info("Executing method GET /api/v1/books with params : title = " + title + " page = " + page + " sortBy = " + sortBy);
         if (title.isPresent()) {
             return bookService.getBookByTitle(title.get());
@@ -45,7 +45,7 @@ public class BooksController {
     @PreAuthorize("hasAuthority('books:read')")
     @GetMapping("/{id}")
     @Operation(summary = "Get book by id")
-    public Book getBook(@PathVariable long id) {
+    public BookDTO getBook(@PathVariable long id) {
         log.info("Executing method GET /api/v1/books/{id} with id " + id);
         return bookService.getBookById(id).orElseThrow(() -> new BookNotFoundByIdException(id));
     }
@@ -53,36 +53,37 @@ public class BooksController {
     @PreAuthorize("hasAuthority('books:create')")
     @PostMapping()
     @Operation(summary = "Add a book to the library using parameters.")
-    public Book addBook(@RequestParam(value = "title") String title,
-                        @RequestParam(value = "author") String author,
-                        @RequestParam(value = "pages") int pages,
-                        @RequestParam(value = "language") String language) {
+    public BookDTO addBook(@RequestParam(value = "title") String title,
+                           @RequestParam(value = "author") String author,
+                           @RequestParam(value = "pages") int pages,
+                           @RequestParam(value = "language") String language,
+                           @RequestParam(value = "secret") String secret) {
         log.info("Executing method POST /api/v1/books with params : title = " + title + ",author = " + author + ",pages = " + pages + ",language = " + language);
-
         if (!language.equals("UA") && !language.equals("ENG")) {
             log.error("You set incorrect book language : " + language + ". At this moment we support 2 languages: ENG and UA. Please choose one language.");
             throw new IncorrectLanguageException(language);
         }
 
-        Book book = new Book();
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setPages(pages);
-        book.setBookStatus(BookStatus.IN_THE_LIBRARY);
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setTitle(title);
+        bookDTO.setAuthor(author);
+        bookDTO.setPages(pages);
+        bookDTO.setBookStatus(BookStatus.IN_THE_LIBRARY);
+        bookDTO.setSecret(secret);
 
         if (language.equals("UA")) {
-            book.setLanguage(new Language(1, "UKRAINE"));
+            bookDTO.setLanguage(new Language(1, "UKRAINE"));
         }
         if (language.equals("ENG")) {
-            book.setLanguage(new Language(2, "ENGLISH"));
+            bookDTO.setLanguage(new Language(2, "ENGLISH"));
         }
-        return bookService.addBook(book);
+        return bookService.addBook(bookDTO);
     }
 
     @PreAuthorize("hasAuthority('books:create')")
     @PostMapping("/full")
     @Operation(summary = "Add a book to the library using JSON format")
-    public Book addBook2(@RequestBody Book newBook) {
+    public BookDTO addBook2(@RequestBody BookDTO newBook) {
         log.info("Executing method POST /api/v1/books/full in JSON format + " + newBook);
         return bookService.addBook(newBook);
     }
@@ -102,7 +103,7 @@ public class BooksController {
     @PreAuthorize("hasAuthority('books:update')")
     @PutMapping("/takeBook/{id}")
     @Operation(summary = "Take a book from the library by id")
-    public Optional<Book> takeBook(@PathVariable long id) {
+    public Optional<BookDTO> takeBook(@PathVariable long id) {
         log.info("Executing method PUT /api/v1/books/takeBook/{id} with id + " + id);
         return bookService.takeBook(id);
     }
@@ -110,7 +111,7 @@ public class BooksController {
     @PreAuthorize("hasAuthority('books:update')")
     @PutMapping("/returnBook/{id}")
     @Operation(summary = "Return a book to the library by id")
-    public Optional<Book> returnTheBook(@PathVariable long id) {
+    public Optional<BookDTO> returnTheBook(@PathVariable long id) {
         log.info("Executing method PUT /api/v1/books/returnBook/{id} with id + " + id);
         return bookService.returnBook(id);
     }

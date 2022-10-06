@@ -1,4 +1,4 @@
-package com.example.Library.services;
+package com.example.Library.services.impl;
 
 import com.example.Library.dto.AuthenticationRequestDTO;
 import com.example.Library.dto.AuthenticationResponseDTO;
@@ -26,11 +26,9 @@ public class AuthenticationService {
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
-
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
-
     public AuthenticationResponseDTO authenticate(@RequestBody AuthenticationRequestDTO request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));

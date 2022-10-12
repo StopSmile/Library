@@ -5,7 +5,7 @@ import com.example.Library.enums.BookStatus;
 import com.example.Library.exceptions.BookNotFoundByIdException;
 import com.example.Library.exceptions.IncorrectLanguageException;
 import com.example.Library.model.Language;
-import com.example.Library.services.impl.BookService;
+import com.example.Library.services.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ public class BooksController {
     private final static int START_PAGE_BY_DEFAULT = 0;
     private final static String SORT_BY_DEFAULT_FIELD = "id";
     private final BookService bookService;
-
     @Autowired
     public BooksController(BookService bookService) {
         this.bookService = bookService;

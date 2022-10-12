@@ -8,7 +8,7 @@ import com.example.Library.exceptions.BookNotFoundByIdException;
 import com.example.Library.exceptions.BookNotFoundByTitleException;
 import com.example.Library.model.Book;
 import com.example.Library.repositories.BookRepository;
-import com.example.Library.services.MappingBookService;
+import com.example.Library.services.BookService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,23 +22,22 @@ import java.util.Optional;
 
 @Service
 @Log4j2
-public class BookService implements com.example.Library.services.BookService {
+public class BookServiceImpl implements BookService {
 
     private final static Integer PAGE_SIZE = 5;
     private final BookRepository bookRepository;
-    private final MappingBookService mappingBookService;
-
+    private final BookMapper bookMapper;
     @Autowired
-    public BookService(BookRepository bookRepository, MappingBookService mappingBookService) {
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
-        this.mappingBookService = mappingBookService;
+        this.bookMapper = bookMapper;
     }
 
     public Optional<BookDTO> getBookById(long id) {
         log.info("Get book by id {}", id);
         Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundByIdException(id));
         log.info("Book with {} id is found", id);
-        return Optional.ofNullable(mappingBookService.mapBookToBookDTO(book));
+        return Optional.ofNullable(bookMapper.mapBookToBookDTO(book));
     }
 
     public Iterable<BookDTO> getBooksByTitle(String title) {
@@ -54,9 +53,9 @@ public class BookService implements com.example.Library.services.BookService {
     public BookDTO addBook(BookDTO entity) {
         log.info("Add book with id : {} author : {} title : {} pages : {} language : {}",
                 entity.getId(), entity.getAuthor(), entity.getTitle(), entity.getPages(), entity.getLanguage());
-        Book book = mappingBookService.mapBookDtoToBook(entity);
+        Book book = bookMapper.mapBookDtoToBook(entity);
         book = bookRepository.save(book);
-        return mappingBookService.mapBookToBookDTO(book);
+        return bookMapper.mapBookToBookDTO(book);
     }
 
     public void deleteBookById(long id) {
@@ -77,7 +76,7 @@ public class BookService implements com.example.Library.services.BookService {
         return bookRepository.findById(id)
                 .map(book -> {
                     book.setBookStatus(BookStatus.NOT_IN_THE_LIBRARY);
-                    return mappingBookService.mapBookToBookDTO(bookRepository.save(book));
+                    return bookMapper.mapBookToBookDTO(bookRepository.save(book));
                 });
     }
 
@@ -94,14 +93,14 @@ public class BookService implements com.example.Library.services.BookService {
         return bookRepository.findById(id)
                 .map(book -> {
                     book.setBookStatus(BookStatus.IN_THE_LIBRARY);
-                    return mappingBookService.mapBookToBookDTO(bookRepository.save(book));
+                    return bookMapper.mapBookToBookDTO(bookRepository.save(book));
                 });
     }
 
     public Page<BookDTO> getAllBooksInPages(Integer page, String sortBy) {
         log.info("Get all books in pages. Start from page {} and sort by {}", page, sortBy);
         return bookRepository.findAll(PageRequest.of(page, PAGE_SIZE, Sort.Direction.ASC, sortBy))
-                .map(mappingBookService::mapBookToBookDTO);
+                .map(bookMapper::mapBookToBookDTO);
     }
 
     public Page<BookDTO> getBookByTitle(String title) {
@@ -118,7 +117,7 @@ public class BookService implements com.example.Library.services.BookService {
     public ArrayList<BookDTO> mappingBookListToBookDtoList(Iterable<Book> bookList) {
         ArrayList<BookDTO> booksDTO = new ArrayList<>();
         for (Book x : bookList) {
-            booksDTO.add(mappingBookService.mapBookToBookDTO(x));
+            booksDTO.add(bookMapper.mapBookToBookDTO(x));
         }
         return booksDTO;
     }

@@ -2,7 +2,7 @@ package com.example.Library.controller;
 
 import com.example.Library.dto.AuthenticationRequestDTO;
 import com.example.Library.dto.AuthenticationResponseDTO;
-import com.example.Library.services.AuthenticationService;
+import com.example.Library.services.impl.AuthenticationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

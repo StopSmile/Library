@@ -1,4 +1,4 @@
-package com.example.Library.services;
+package com.example.Library.services.impl;
 
 import com.example.Library.dto.AuthenticationRequestDTO;
 import com.example.Library.dto.AuthenticationResponseDTO;
@@ -6,6 +6,7 @@ import com.example.Library.exceptions.InvalidEmailOrPassword;
 import com.example.Library.model.User;
 import com.example.Library.repositories.UserRepository;
 import com.example.Library.security.JwtTokenProvider;
+import com.example.Library.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,16 +22,14 @@ import java.util.Optional;
 @Service
 @Log4j2
 public class AuthenticationService {
-    public AuthenticationService(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationService(AuthenticationManager authenticationManager, UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
-
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
-
     public AuthenticationResponseDTO authenticate(@RequestBody AuthenticationRequestDTO request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -38,7 +37,7 @@ public class AuthenticationService {
             log.error("Invalid email/password combination", e);
             throw new InvalidEmailOrPassword(request.getEmail(), request.getPassword());
         }
-        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        Optional<User> user = userService.findByEmail(request.getEmail());
         if (user.isPresent()) {
             String token = jwtTokenProvider.createToken(request.getEmail(), user.get().getRole().name());
             return new AuthenticationResponseDTO(request.getEmail(), token);

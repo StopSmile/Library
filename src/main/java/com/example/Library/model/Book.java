@@ -4,6 +4,8 @@ import com.example.Library.enums.BookStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 
 @Data
@@ -20,12 +22,12 @@ public class Book {
     private String author;
     private int pages;
     @ManyToOne
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "language_id", foreignKey = @ForeignKey(name = "LANGUAGE_ID_FK")
     )
     private Language language;
-
     @Enumerated(value = EnumType.STRING)
     private BookStatus bookStatus;
-
+    private String secret;
 
 }

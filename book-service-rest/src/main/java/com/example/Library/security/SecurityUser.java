@@ -1,7 +1,9 @@
 package com.example.Library.security;
 
 import com.example.Library.dto.UserDTO;
+import com.example.Library.enums.Role;
 import com.example.Library.enums.UserStatus;
+import com.example.Library.services.impl.UserMapper;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,15 +28,16 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails fromUser(UserDTO userDTO){
+        UserMapper userMapper = new UserMapper();
 
         return new org.springframework.security.core.userdetails.User(
                 userDTO.getEmail(),
                 userDTO.getPassword(),
-                userDTO.getUserStatus().equals(UserStatus.ACTIVE),
-                userDTO.getUserStatus().equals(UserStatus.ACTIVE),
-                userDTO.getUserStatus().equals(UserStatus.ACTIVE),
-                userDTO.getUserStatus().equals(UserStatus.ACTIVE),
-                userDTO.getRole().getAuthorities()
+                userDTO.getUserStatus().equals("ACTIVE"),
+                userDTO.getUserStatus().equals("ACTIVE"),
+                userDTO.getUserStatus().equals("ACTIVE"),
+                userDTO.getUserStatus().equals("ACTIVE"),
+                userMapper.getRoleFromUserDto(userDTO).getAuthorities()
                 );
     }
 

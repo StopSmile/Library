@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class mvnJwtTokenProviderTests {
+public class JwtTokenProviderTests {
 
     @Test
     public void extractJwtFromBearer_whenCorrectBearerValueProvided_shouldReturnJwtToken() {

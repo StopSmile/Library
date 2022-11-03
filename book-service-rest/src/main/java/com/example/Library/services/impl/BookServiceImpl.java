@@ -50,10 +50,10 @@ public class BookServiceImpl implements BookService {
         return mappingBookListToBookDtoList(bookRepository.findAll());
     }
 
-    public BookDTO addBook(BookDTO entity) {
+    public BookDTO addBook(BookDTO bookDTO) {
         log.info("Add book with id : {} author : {} title : {} pages : {} language : {}",
-                entity.getId(), entity.getAuthor(), entity.getTitle(), entity.getPages(), entity.getLanguage());
-        Book book = bookMapper.mapBookDtoToBook(entity);
+                bookDTO.getId(), bookDTO.getAuthor(), bookDTO.getTitle(), bookDTO.getPages(), bookDTO.getLanguage());
+        Book book = bookMapper.mapBookDtoToBook(bookDTO);
         book = bookRepository.save(book);
         return bookMapper.mapBookToBookDTO(book);
     }

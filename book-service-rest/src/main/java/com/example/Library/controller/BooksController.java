@@ -67,14 +67,14 @@ public class BooksController {
         bookDTO.setTitle(title);
         bookDTO.setAuthor(author);
         bookDTO.setPages(pages);
-        bookDTO.setBookStatus(BookStatus.IN_THE_LIBRARY);
+        bookDTO.setBookStatus("IN_THE_LIBRARY");
         bookDTO.setSecret(secret);
 
         if (language.equals("UA")) {
-            bookDTO.setLanguage(new Language(1, "UKRAINE"));
+            bookDTO.setLanguage("UKRAINE");
         }
         if (language.equals("ENG")) {
-            bookDTO.setLanguage(new Language(2, "ENGLISH"));
+            bookDTO.setLanguage("ENGLISH");
         }
         return bookService.addBook(bookDTO);
     }

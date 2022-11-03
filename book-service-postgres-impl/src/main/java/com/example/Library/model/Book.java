@@ -22,7 +22,7 @@ public class Book {
     private String author;
     private int pages;
     @ManyToOne
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     @JoinColumn(name = "language_id", foreignKey = @ForeignKey(name = "LANGUAGE_ID_FK")
     )
     private Language language;

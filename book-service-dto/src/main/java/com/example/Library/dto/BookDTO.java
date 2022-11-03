@@ -1,7 +1,5 @@
 package com.example.Library.dto;
 
-import com.example.Library.enums.BookStatus;
-import com.example.Library.model.Language;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
@@ -18,8 +16,8 @@ public class BookDTO {
     private String title;
     private String author;
     private int pages;
-    private Language language;
-    private BookStatus bookStatus;
+    private String language;
+    private String bookStatus;
     private String secret;
 
 }

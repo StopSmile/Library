@@ -1,8 +1,5 @@
 package com.example.Library.dto;
 
-import com.example.Library.model.Gender;
-import com.example.Library.enums.Role;
-import com.example.Library.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +16,8 @@ public class UserDTO {
     private int age;
     private String email;
     private String password;
-    private Gender gender;
-    private Role role;
-    private UserStatus userStatus;
+    private String gender;
+    private String role;
+    private String userStatus;
 
 }

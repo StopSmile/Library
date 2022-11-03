@@ -38,7 +38,7 @@ public class AuthenticationService {
         }
         Optional<UserDTO> user = userService.findByEmail(request.getEmail());
         if (user.isPresent()) {
-            String token = jwtTokenProvider.createToken(request.getEmail(), user.get().getRole().name());
+            String token = jwtTokenProvider.createToken(request.getEmail(), user.get().getRole());
             return new AuthenticationResponseDTO(request.getEmail(), token);
         }
         log.error("User doesn't exist {}", request.getEmail());

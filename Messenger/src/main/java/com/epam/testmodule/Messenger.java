@@ -1,8 +1,8 @@
-package com.epam.ld.module2.testing;
+package com.epam.testmodule;
 
 
-import com.epam.ld.module2.testing.template.Template;
-import com.epam.ld.module2.testing.template.TemplateEngine;
+import com.epam.testmodule.template.Template;
+import com.epam.testmodule.template.TemplateEngine;
 
 /**
  * The type Messenger.
@@ -21,6 +21,14 @@ public class Messenger {
                      TemplateEngine templateEngine) {
         this.mailServer = mailServer;
         this.templateEngine = templateEngine;
+    }
+    public void sendDefaultMessage(){
+        Client client = new Client();
+        Template template = new Template();
+        client.setMail("client@gmail.com");
+        template.setDate("10.10.2023");
+        template.setEventName("JAVA DAY");
+        sendMessage(client,template);
     }
 
     /**

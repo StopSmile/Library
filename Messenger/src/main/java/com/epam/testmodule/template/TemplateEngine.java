@@ -1,9 +1,11 @@
-package com.epam.ld.module2.testing.template;
-import com.epam.ld.module2.testing.Client;
+package com.epam.testmodule.template;
+import com.epam.testmodule.Client;
+import lombok.Data;
 
 /**
  * The type Template engine.
  */
+@Data
 public class TemplateEngine {
 
     /**

@@ -1,7 +1,7 @@
-package com.epam.ld.module2.testing;
+package com.epam.testmodule;
 
-import com.epam.ld.module2.testing.template.Template;
-import com.epam.ld.module2.testing.template.TemplateEngine;
+import com.epam.testmodule.template.Template;
+import com.epam.testmodule.template.TemplateEngine;
 
 import java.util.Scanner;
 

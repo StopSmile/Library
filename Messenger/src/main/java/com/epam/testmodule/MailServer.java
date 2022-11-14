@@ -1,4 +1,4 @@
-package com.epam.ld.module2.testing;
+package com.epam.testmodule;
 
 /**
  * Mail server class.

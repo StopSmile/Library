@@ -1,8 +1,8 @@
-package com.epam.ld.module2.testing;
+package com.epam.testmodule;
 
 
-import com.epam.ld.module2.testing.template.Template;
-import com.epam.ld.module2.testing.template.TemplateEngine;
+import com.epam.testmodule.template.Template;
+import com.epam.testmodule.template.TemplateEngine;
 
 import java.io.*;
 import java.util.Scanner;
@@ -62,7 +62,6 @@ public class FileMode {
     }
 
     public void startEngine(String parseFile) {
-        System.out.println(parseFile);
         String[] data = parseFile.split("`");
         Template template = new Template();
         Client client = new Client();
@@ -75,17 +74,17 @@ public class FileMode {
 
 
     public void start() throws IOException {
-        FileMode fileMode = new FileMode();
-        String pathToFile = fileMode.getInfoFromUser();
-        boolean checkFile = fileMode.checkFilePath(pathToFile);
+        String pathToFile = getInfoFromUser();
+        boolean checkFile = checkFilePath(pathToFile);
         String dataFromFile;
         String parsedFile;
         if (checkFile) {
-            dataFromFile = fileMode.getDataFromFile(pathToFile);
-            parsedFile = fileMode.parseFile(dataFromFile);
-            fileMode.startEngine(parsedFile);
-        } else {
-            fileMode.start();
+            dataFromFile = getDataFromFile(pathToFile);
+            parsedFile = parseFile(dataFromFile);
+            startEngine(parsedFile);
+        }else {
+            ChoseMode choseMode = new ChoseMode();
+            choseMode.start();
         }
     }
 

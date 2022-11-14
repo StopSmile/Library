@@ -1,4 +1,5 @@
-package com.epam.ld.module2.testing;
+package com.epam.testmodule;
+
 
 import java.io.IOException;
 

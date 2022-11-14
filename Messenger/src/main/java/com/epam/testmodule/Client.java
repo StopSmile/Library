@@ -1,8 +1,13 @@
-package com.epam.ld.module2.testing;
+package com.epam.testmodule;
+
+import lombok.Data;
+
+
 
 /**
  * The type Client.
  */
+@Data
 public class Client {
     private String mail;
 
@@ -23,4 +28,5 @@ public class Client {
     public void setMail(String mail) {
         this.mail = mail;
     }
+
 }

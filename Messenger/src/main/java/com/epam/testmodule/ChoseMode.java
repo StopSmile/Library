@@ -4,18 +4,14 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class ChoseMode {
-    private final ConsoleMode consoleMode = new ConsoleMode();
-    private final FileMode fileMode = new FileMode();
+    private ConsoleMode consoleMode;
+    private FileMode fileMode;
+    public ChoseMode(){
 
-    public ConsoleMode getConsoleMode() {
-        return consoleMode;
     }
-
-    public FileMode getFileMode() {
-        return fileMode;
-    }
-
-    public ChoseMode() {
+    public ChoseMode(ConsoleMode consoleMode, FileMode fileMode) {
+        this.consoleMode = consoleMode;
+        this.fileMode = fileMode;
     }
     public void start() throws IOException {
         System.out.println("Hello, this is Messenger. Please choose the mode for the application. In the first mode, you should set data from the console.");

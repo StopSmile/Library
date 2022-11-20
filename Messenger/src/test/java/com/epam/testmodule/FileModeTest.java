@@ -87,17 +87,12 @@ class FileModeTest {
         template.setDate(actualSplitFiles[1]);
         client.setMail(actualSplitFiles[2]);
         FileMode fileMode = spy(new FileMode());
-        MailServer mailServer = mock(MailServer.class);
-        TemplateEngine templateEngine = mock(TemplateEngine.class);
-        Messenger messengerSpy = Mockito.spy(new Messenger(mailServer, templateEngine));
         //when
         fileMode.startEngine(parseFile);
-        messengerSpy.sendMessage(client, template);
         //assert
         assertArrayEquals(actualSplitFiles, expectedSplitFiles);
-        verify(fileMode).startEngine(parseFile);
-        verify(messengerSpy, Mockito.times(1)).sendMessage(client, template);
-        verify(messengerSpy).sendMessage(client, template);
+        verify(fileMode,times(1)).startEngine(parseFile);
+
     }
     @Test
     public void getInfoFromUser_ShouldReturnAnyString(){

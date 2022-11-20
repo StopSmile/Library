@@ -6,6 +6,8 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
+import static org.mockito.Mockito.*;
+
 class ChoseModeTest {
     @Test
     @ExpectSystemExitWithStatus(0)
@@ -18,27 +20,34 @@ class ChoseModeTest {
     @Test
     public void CheckInput_whenInputEqualsOne_ShouldRunConsoleModerRun() throws IOException {
         //given
-        ChoseMode choseMode = Mockito.mock(ChoseMode.class);
-        ConsoleMode consoleMode = Mockito.mock(ConsoleMode.class);
+        ConsoleMode consoleMode = Mockito.spy(new ConsoleMode());
+        FileMode fileMode = Mockito.spy(new FileMode());
+        ChoseMode choseMode = new ChoseMode(consoleMode,fileMode);
+        doReturn("JAVA DAY").when(consoleMode).getEventNameFromConsole();
+        doReturn("10.10.2023").when(consoleMode).getEventDateFromConsole();
+        doReturn("client@gmail.com").when(consoleMode).getClientEmailFromConsole();
         //when
         choseMode.checkInput("1");
-        consoleMode.start();
         //assert
-        Mockito.verify(choseMode,Mockito.times(1)).checkInput("1");
-        Mockito.verify(consoleMode,Mockito.times(1)).start();
-
+        verify(consoleMode).start();
+        verify(consoleMode).getEventDateFromConsole();
+        verify(consoleMode).getClientEmailFromConsole();
+        verify(consoleMode).getEventNameFromConsole();
     }
     @Test
     public void CheckInput_whenInputEqualsTwo_ShouldRunFileModerRun() throws IOException {
         //given
-        ChoseMode choseMode = Mockito.mock(ChoseMode.class);
-        FileMode fileMode = Mockito.mock(FileMode.class);
+        ConsoleMode consoleMode = Mockito.spy(new ConsoleMode());
+        FileMode fileMode = Mockito.spy(new FileMode());
+        ChoseMode choseMode = new ChoseMode(consoleMode,fileMode);
+        doReturn("E:\\TempDir\\data4.txt").when(fileMode).getInfoFromUser();
+        doReturn(true).when(fileMode).checkFilePath("E:\\TempDir\\data4.txt");
         //when
         choseMode.checkInput("2");
-        fileMode.start();
         //assert
-        Mockito.verify(choseMode,Mockito.times(1)).checkInput("2");
-        Mockito.verify(fileMode,Mockito.times(1)).start();
+        verify(fileMode).start();
+        verify(fileMode).getInfoFromUser();
+        verify(fileMode).checkFilePath("E:\\TempDir\\data4.txt");
     }
 
 }

@@ -22,13 +22,14 @@ public class Messenger {
         this.mailServer = mailServer;
         this.templateEngine = templateEngine;
     }
-    public void sendDefaultMessage(){
+
+    public void sendDefaultMessage() {
         Client client = new Client();
         Template template = new Template();
         client.setMail("client@gmail.com");
         template.setDate("10.10.2023");
         template.setEventName("JAVA DAY");
-        sendMessage(client,template);
+        sendMessage(client, template);
     }
 
     /**
@@ -38,8 +39,7 @@ public class Messenger {
      * @param template the template
      */
     public void sendMessage(Client client, Template template) {
-        String messageContent =
-            templateEngine.generateMessage(template, client);
+        String messageContent = templateEngine.generateMessage(template, client);
         mailServer.send(client.getMail(), messageContent);
     }
 }

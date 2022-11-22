@@ -8,6 +8,7 @@
         <module>book-service-dto</module>
         <module>book-service-api</module>
         <module>book-service-postgres-impl</module>
+        <module>Messenger</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

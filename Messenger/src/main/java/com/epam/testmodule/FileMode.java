@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class FileMode {
+
     public FileMode() {
     }
 
@@ -73,7 +74,7 @@ public class FileMode {
     }
 
 
-    public void start() throws IOException {
+    public boolean start() throws IOException {
         String pathToFile = getInfoFromUser();
         boolean checkFile = checkFilePath(pathToFile);
         String dataFromFile;
@@ -82,10 +83,9 @@ public class FileMode {
             dataFromFile = getDataFromFile(pathToFile);
             parsedFile = parseFile(dataFromFile);
             startEngine(parsedFile);
-        }else {
-            ChoseMode choseMode = new ChoseMode();
-            choseMode.start();
+            return true;
         }
+        return false;
     }
 
 

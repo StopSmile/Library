@@ -40,14 +40,14 @@ class ChoseModeTest {
         ConsoleMode consoleMode = Mockito.spy(new ConsoleMode());
         FileMode fileMode = Mockito.spy(new FileMode());
         ChoseMode choseMode = new ChoseMode(consoleMode,fileMode);
-        doReturn("E:\\TempDir\\data4.txt").when(fileMode).getInfoFromUser();
-        doReturn(true).when(fileMode).checkFilePath("E:\\TempDir\\data4.txt");
+        doReturn("C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data2.txt").when(fileMode).getInfoFromUser();
+        doReturn(true).when(fileMode).checkFilePath("C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data2.txt");
         //when
         choseMode.checkInput("2");
         //assert
         verify(fileMode).start();
         verify(fileMode).getInfoFromUser();
-        verify(fileMode).checkFilePath("E:\\TempDir\\data4.txt");
+        verify(fileMode).checkFilePath("C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data2.txt");
     }
 
 }

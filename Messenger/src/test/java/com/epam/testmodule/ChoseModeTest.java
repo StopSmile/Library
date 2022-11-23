@@ -41,7 +41,7 @@ class ChoseModeTest {
         FileMode fileMode = Mockito.spy(new FileMode());
         ChoseMode choseMode = new ChoseMode(consoleMode,fileMode);
         doReturn("C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data2.txt").when(fileMode).getInfoFromUser();
-        doReturn(true).when(fileMode).checkFilePath("C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data2.txt");
+        doReturn(true).when(fileMode).checkFilePath("C:\\Users\\Ivan_Pylypiv\\IdeaProjects\\Library\\Messenger\\data2.txt");
         //when
         choseMode.checkInput("2");
         //assert

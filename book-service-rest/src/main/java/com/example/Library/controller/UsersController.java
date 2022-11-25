@@ -8,15 +8,15 @@ import com.example.Library.exceptions.IncorrectUserStatusException;
 import com.example.Library.exceptions.UserAlreadyExists;
 import com.example.Library.repositories.UserRepository;
 import com.example.Library.services.UserService;
+import com.example.Library.services.impl.LoginAttemptService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -27,11 +27,19 @@ public class UsersController {
     private final UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private LoginAttemptService loginAttemptService;
 
     @Autowired
     public UsersController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
+    }
+   // @PreAuthorize("hasAuthority('books:create')")
+    @GetMapping()
+    @Operation(summary = "Get all blocked users")
+    public ArrayList<String> getAllBlockedUsers(){
+        return loginAttemptService.getAllBlockedUsers();
     }
 
     @PreAuthorize("hasAuthority('books:create')")

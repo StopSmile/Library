@@ -25,6 +25,10 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
     public Optional<UserDTO> findByEmail(String email) {
         log.info("Get user by email {}", email);
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
@@ -40,5 +44,6 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         return userMapper.mapUserToUserDTO(user);
     }
+
 
 }

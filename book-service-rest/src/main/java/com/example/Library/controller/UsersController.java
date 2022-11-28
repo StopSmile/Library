@@ -17,14 +17,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @Slf4j
 public class UsersController {
-
     private final UserService userService;
     private final UserRepository userRepository;
+    private final Set<String> GENDER_SET = new HashSet<>(Arrays.asList("MALE", "FEMALE"));
+    private final Set<String> ROLE_SET = new HashSet<>(Arrays.asList("ADMIN", "CLIENT", "GUEST"));
+    private final Set<String> USER_STATUS_SET = new HashSet<>(Arrays.asList("ACTIVE", "BANNED"));
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -35,14 +40,15 @@ public class UsersController {
         this.userService = userService;
         this.userRepository = userRepository;
     }
-   // @PreAuthorize("hasAuthority('books:create')")
+
+    @PreAuthorize("hasAuthority('users:read')")
     @GetMapping()
     @Operation(summary = "Get all blocked users")
-    public ArrayList<String> getAllBlockedUsers(){
+    public ArrayList<String> getAllBlockedUsers() {
         return loginAttemptService.getAllBlockedUsers();
     }
 
-    @PreAuthorize("hasAuthority('books:create')")
+    @PreAuthorize("hasAuthority('users:create')")
     @PostMapping()
     @Operation(summary = "Add a user to the library using parameters.")
     public UserDTO addUser(@RequestParam(value = "firstName") String firstName,
@@ -60,47 +66,27 @@ public class UsersController {
             log.error("User with email " + email + " already exists");
             throw new UserAlreadyExists(email);
         }
-        if (!gender.equals("MALE") && !gender.equals("FEMALE")) {
-            log.error("You set incorrect user gender : " + gender + ". At this moment we support 2 genders: MALE and FEMALE. Please choose one of these.");
+        UserDTO userDTO = new UserDTO();
+        if (GENDER_SET.contains(gender)) {
+            userDTO.setGender(gender);
+        } else {
             throw new IncorrectGenderException(gender);
         }
-        if (!role.equals("ADMIN") && !role.equals("CLIENT") && !role.equals("GUEST")) {
-            log.error("You set incorrect user role : " + role + ". At this moment we support 3 roles: ADMIN, CLIENT and GUEST. Please choose one of these.");
+        if (ROLE_SET.contains(role)) {
+            userDTO.setRole(role);
+        } else {
             throw new IncorrectRoleException(role);
         }
-        if (!userStatus.equals("ACTIVE") && !userStatus.equals("BANNED")) {
-            log.error("You set incorrect user status : " + userStatus + ". At this moment we support 2 statuses: ACTIVE and BANNED. Please choose one of these.");
+        if (USER_STATUS_SET.contains(userStatus)) {
+            userDTO.setUserStatus(userStatus);
+        } else {
             throw new IncorrectUserStatusException(userStatus);
         }
-
-        UserDTO userDTO = new UserDTO();
         userDTO.setFirstName(firstName);
         userDTO.setLastName(lastName);
         userDTO.setAge(age);
         userDTO.setEmail(email);
         userDTO.setPassword(passwordEncoder.encode(password));
-        if (gender.equals("MALE")) {
-            userDTO.setGender("MALE");
-        }
-        if (gender.equals("FEMALE")) {
-            userDTO.setGender("FEMALE");
-        }
-        if (role.equals("ADMIN")) {
-            userDTO.setRole("ADMIN");
-        }
-        if (role.equals("CLIENT")) {
-            userDTO.setRole("CLIENT");
-        }
-        if (role.equals("GUEST")) {
-            userDTO.setRole("GUEST");
-        }
-        if (userStatus.equals("ACTIVE")) {
-            userDTO.setUserStatus("ACTIVE");
-        }
-        if (userStatus.equals("BANNED")) {
-            userDTO.setUserStatus("BANNED");
-        }
         return userService.addUser(userDTO);
     }
-
 }

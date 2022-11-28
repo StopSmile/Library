@@ -13,7 +13,6 @@ import com.google.common.cache.LoadingCache;
 
 @Service
 public class LoginAttemptService {
-
     private final int MAX_ATTEMPT = 3;
     private LoadingCache<String, Integer> attemptsCache;
 
@@ -30,16 +29,16 @@ public class LoginAttemptService {
     public void loginSucceeded(String key) {
         attemptsCache.invalidate(key);
     }
-    public ArrayList<String> getAllBlockedUsers(){
+
+    public ArrayList<String> getAllBlockedUsers() {
         ArrayList<String> allBlockedUser = new ArrayList<>();
-        for (Map.Entry<String,Integer> entry : attemptsCache.asMap().entrySet()){
-            if (entry.getValue() >= MAX_ATTEMPT){
+        for (Map.Entry<String, Integer> entry : attemptsCache.asMap().entrySet()) {
+            if (entry.getValue() >= MAX_ATTEMPT) {
                 allBlockedUser.add(entry.getKey());
             }
         }
         return allBlockedUser;
     }
-
 
     public void loginFailed(String key) {
         int attempts = 0;

@@ -4,7 +4,9 @@ public enum Permission {
     BOOKS_CREATE("books:create"),
     BOOKS_READ("books:read"),
     BOOKS_UPDATE("books:update"),
-    BOOKS_DELETE("books:delete");
+    BOOKS_DELETE("books:delete"),
+    USERS_CREATE("users:create"),
+    USERS_READ("users:read");
 
 
     private final String permission;

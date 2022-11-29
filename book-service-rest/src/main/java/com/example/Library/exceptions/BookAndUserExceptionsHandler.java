@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class BookExceptionsHandler {
+public class BookAndUserExceptionsHandler {
 
     @ResponseBody
     @ExceptionHandler(BookNotFoundByIdException.class)
@@ -47,6 +47,36 @@ public class BookExceptionsHandler {
     @ExceptionHandler(InvalidEmailOrPassword.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     String InvalidEmailOrPassword(InvalidEmailOrPassword ex){
+        return ex.getMessage();
+    }
+    @ResponseBody
+    @ExceptionHandler(IncorrectGenderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String IncorrectGenderException(IncorrectGenderException ex){
+        return ex.getMessage();
+    }
+    @ResponseBody
+    @ExceptionHandler(IncorrectRoleException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String IncorrectRoleException(IncorrectRoleException ex){
+        return ex.getMessage();
+    }
+    @ResponseBody
+    @ExceptionHandler(IncorrectUserStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String IncorrectUserStatusException(IncorrectUserStatusException ex){
+        return ex.getMessage();
+    }
+    @ResponseBody
+    @ExceptionHandler(UserAlreadyExists.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    String UserAlreadyExists(UserAlreadyExists ex){
+        return ex.getMessage();
+    }
+    @ResponseBody
+    @ExceptionHandler(UserIsBlocked.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    String UserIsBlocked(UserIsBlocked ex){
         return ex.getMessage();
     }
 

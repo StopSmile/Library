@@ -42,10 +42,10 @@ class FileModeTest {
     Iterable<DynamicTest> dynamicTests_checkFilePath_IfFilePathExist_ShouldReturnTrue() {
         Assertions.assertTrue(this.anotherTempDir.isDirectory(), "Should be a directory ");
         FileMode fileMode = new FileMode();
-        String file2 = "C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data2.txt";
-        String file3 = "C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data3.txt";
-        String file4 = "C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data4.txt";
-        String file5 = "C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data5.txt";
+        String file2 = new File("data2.txt").getAbsolutePath();
+        String file3 = new File("data3.txt").getAbsolutePath();
+        String file4 = new File("data4.txt").getAbsolutePath();
+        String file5 = new File("data5.txt").getAbsolutePath();
         return Arrays.asList(
                 DynamicTest.dynamicTest("data2.txt", () -> assertEquals(true, fileMode.checkFilePath(file2))),
                 DynamicTest.dynamicTest("data3.txt", () -> assertEquals(true, fileMode.checkFilePath(file3))),
@@ -58,7 +58,7 @@ class FileModeTest {
     @Test
     public void getDataFromFile_WhenCorrectFile_ShouldReturnCorrectStringFromFile() throws IOException {
         FileMode fileMode = new FileMode();
-        String extracted = fileMode.getDataFromFile("C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data2.txt");
+        String extracted = fileMode.getDataFromFile(new File("data2.txt").getAbsolutePath());
         String expected = "Event = Halloween Data = 31 October Client mail = mike@gmail.com";
         Assertions.assertEquals(expected, extracted);
     }
@@ -112,7 +112,7 @@ class FileModeTest {
         doReturn("E:\\TempDir\\data2.txt").when(fileMode).getInfoFromUser();
         doReturn(true).when(fileMode).checkFilePath("E:\\TempDir\\data2.txt");
         doReturn("Event = Halloween Data = 31 October Client mail = mike@gmail.com").when(fileMode).getDataFromFile("E:\\TempDir\\data2.txt");
-        String actualDataFromFile = fileMode1.getDataFromFile("C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data2.txt");
+        String actualDataFromFile = fileMode1.getDataFromFile(new File("data2.txt").getAbsolutePath());
         String expectedDataFromFile = "Event = Halloween Data = 31 October Client mail = mike@gmail.com";
         //when
         boolean successfulStart = fileMode.start();
@@ -130,10 +130,10 @@ class FileModeTest {
     @Test
     public void start_WhenUserInputIncorrectPathToFile_ShouldReturnFalse() throws IOException {
         //given
-        String incorrectPath = "C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data99.txt";
+        String path = new File("data99.txt").getAbsolutePath();
         FileMode fileMode = spy(new FileMode());
-        doReturn("C:\\Users\\Ivan_Pylypiv\\Desktop\\Library\\Messenger\\data99.txt").when(fileMode).getInfoFromUser();
-        doReturn(false).when(fileMode).checkFilePath(incorrectPath);
+        doReturn(path).when(fileMode).getInfoFromUser();
+        doReturn(false).when(fileMode).checkFilePath(path);
         //when
         boolean falseStart = fileMode.start();
         //assert

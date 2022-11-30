@@ -9,6 +9,7 @@
         <module>book-service-api</module>
         <module>book-service-postgres-impl</module>
         <module>Messenger</module>
+        <module>OAuth2</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

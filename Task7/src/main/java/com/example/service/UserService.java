@@ -18,14 +18,14 @@ public class UserService {
 
     private final UserRepository repository;
 
-    public User saveOneUser(User user){
+    public User saveOneUser(User user) {
         return this.repository.save(user);
     }
 
-    public User findOneUser(long userId){
+    public User findOneUser(long userId) {
         boolean checkUser = repository.existsById(userId);
-        if (checkUser){
-            this.repository.findById(userId);
+        if (checkUser) {
+            return this.repository.findById(userId).orElseThrow(EntityNotFoundException::new);
         }
         throw new UserNotFoundException(userId);
     }
@@ -39,9 +39,10 @@ public class UserService {
 
     public void deleteOneUser(long userId) {
         boolean checkUser = repository.existsById(userId);
-        if (checkUser){
+        if (checkUser) {
             this.repository.deleteById(userId);
+        } else {
+            throw new UserNotFoundException(userId);
         }
-        throw new UserNotFoundException(userId);
     }
 }

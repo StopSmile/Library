@@ -21,4 +21,8 @@ public class User {
     private String name;
     private String email;
 
+    public User(String name,String mail) {
+        this.name = name;
+        this.email = mail;
+    }
 }

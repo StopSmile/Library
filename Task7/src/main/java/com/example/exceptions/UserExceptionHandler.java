@@ -12,7 +12,7 @@ public class UserExceptionHandler {
     @ResponseBody
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String bookNotFoundHandler(UserNotFoundException ex) {
+    String UserNotFoundException(UserNotFoundException ex) {
         return ex.getMessage();
     }
 }

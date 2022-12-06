@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.entity.User;
+import com.example.exceptions.UserNotFoundException;
 import com.example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.IterableUtils;
@@ -22,7 +23,11 @@ public class UserService {
     }
 
     public User findOneUser(long userId){
-        return this.repository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        boolean checkUser = repository.existsById(userId);
+        if (checkUser){
+            this.repository.findById(userId);
+        }
+        throw new UserNotFoundException(userId);
     }
 
     public List<User> findAllUser() {
@@ -33,6 +38,10 @@ public class UserService {
     }
 
     public void deleteOneUser(long userId) {
-        this.repository.deleteById(userId);
+        boolean checkUser = repository.existsById(userId);
+        if (checkUser){
+            this.repository.deleteById(userId);
+        }
+        throw new UserNotFoundException(userId);
     }
 }

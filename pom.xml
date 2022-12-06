@@ -9,6 +9,8 @@
         <module>book-service-api</module>
         <module>book-service-postgres-impl</module>
         <module>Messenger</module>
+        <module>OAuth2</module>
+        <module>Task7</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -29,10 +31,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
     </dependencies>
 </project>
